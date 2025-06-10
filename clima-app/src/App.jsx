@@ -11,9 +11,9 @@ export default function App() {
   const weatherKey = import.meta.env.VITE_OPENWEATHER_KEY;
   const geoKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
-  async function buscarClima(event) {
-  event.preventDefault(); // ja que eu estou usando o form para conseguir enviar com enter, isso previne que recarregue a página
-  if (!cidade) return;
+  async function buscarClima(nomeDaCidade) {
+  const cidadeBuscada = nomeDaCidade || cidade;
+  if (!cidadeBuscada) return;
 
   setCarregando(true);
   setErro('');
@@ -21,11 +21,12 @@ export default function App() {
 
   try {
     const resp = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=${apiKey}&units=metric&lang=pt_br`
+      `https://api.openweathermap.org/data/2.5/weather?q=${cidadeBuscada}&appid=${weatherKey}&units=metric&lang=pt_br`
     );
-    if (!resp.ok) throw new Error('Cidade não encontrada');
+    if (!resp.ok) throw new Error('Cidade não encontrada! Verifique se o nome foi digitado corretamente');
     const json = await resp.json();
     setDados(json);
+    setSugestoes([]);
   } catch (e) {
     setErro(e.message);
   } finally {
@@ -78,12 +79,12 @@ useEffect(() => {
         { sugestoes?.length > 0 && (
           <ul className="lista-sugestoes">
             {sugestoes.map((sugestao) => (
-              <li
+                            <li
                 key={sugestao.id}
                 onClick={() => {
-                  setCidade(sugestao.name);
-                  setSugestoes([]);
-                  buscarClima(); // chama a função automaticamente ao clicar
+                  setCidade(sugestao.name); 
+                  setSugestoes([]); 
+                  buscarClima(sugestao.name); 
                 }}
               >
                 {sugestao.name}, {sugestao.region}, {sugestao.country}
@@ -98,7 +99,7 @@ useEffect(() => {
       {erro && <p className="erro">{erro}</p>}
 
       {dados && (
-        <section className="card">
+        <section className="mt-3">
           <h2>{dados.name}</h2>
           <p>🌡️ {dados.main.temp} °C</p>
           <p>☁️ {dados.weather[0].description}</p>
