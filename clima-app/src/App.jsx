@@ -60,8 +60,8 @@ export default function App() {
     return () => clearTimeout(timeout);
   }, [cidade]);
 
-  return (
-    <main className="app card p-5">
+  return (    
+    <main className="app bg-transparent card p-5">
       <div className="column">
         <h1 className='display-3'>🌤️ Weather App!</h1>
         <p className='lead p-2'>Descubra o clima de uma cidade agora!</p>
@@ -80,6 +80,8 @@ export default function App() {
       <AlertaErro erro={erro} carregando={carregando} />
 
       <ResultadoClima dados={dados} />
+      
+  
     </main>
   );
 }
