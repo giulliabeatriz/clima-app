@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
 import './App.css';
+import InputClima from './components/inputClima';
+import ResultadoClima from './components/resultadoClima';
+import AlertaErro from './components/alertaErro';
+import { useState, useEffect } from 'react';
 
 export default function App() {
   const [cidade, setCidade] = useState('');
@@ -7,34 +10,35 @@ export default function App() {
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [sugestoes, setSugestoes] = useState([]);
+  const [focado, setFocado] = useState(false);
 
   const weatherKey = import.meta.env.VITE_OPENWEATHER_KEY;
   const geoKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
   async function buscarClima(nomeDaCidade) {
-  const cidadeBuscada = nomeDaCidade || cidade;
-  if (!cidadeBuscada) return;
+    const cidadeBuscada = nomeDaCidade || cidade;
+    if (!cidadeBuscada) return;
 
-  setCarregando(true);
-  setErro('');
-  setDados(null);
+    setCarregando(true);
+    setErro('');
+    setDados(null);
 
-  try {
-    const resp = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${cidadeBuscada}&appid=${weatherKey}&units=metric&lang=pt_br`
-    );
-    if (!resp.ok) throw new Error('Cidade não encontrada! Verifique se o nome foi digitado corretamente');
-    const json = await resp.json();
-    setDados(json);
-    setSugestoes([]);
-  } catch (e) {
-    setErro(e.message);
-  } finally {
-    setCarregando(false);
+    try {
+      const resp = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cidadeBuscada}&appid=${weatherKey}&units=metric&lang=pt_br`
+      );
+      if (!resp.ok) throw new Error('Cidade não encontrada!');
+      const json = await resp.json();
+      setDados(json);
+      setSugestoes([]);
+    } catch (e) {
+      setErro(e.message);
+    } finally {
+      setCarregando(false);
+    }
   }
-}
 
-useEffect(() => {
+  useEffect(() => {
     if (cidade.length < 2) {
       setSugestoes([]);
       return;
@@ -51,61 +55,31 @@ useEffect(() => {
         .then((res) => res.json())
         .then((data) => setSugestoes(data.data))
         .catch((err) => console.error(err));
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(timeout);
   }, [cidade]);
 
-  const selecionarCidade = (nome) => {
-    setCidade(nome);
-    setSugestoes([]);
-  };
-
   return (
-    <main className="app card">
+    <main className="app card p-5">
       <div className="column">
-        <h1>🌤️ Weather App!</h1>
-      <p>Descubra o clima da cidade agora!</p>
+        <h1 className='display-3'>🌤️ Weather App!</h1>
+        <p className='lead p-2'>Descubra o clima de uma cidade agora!</p>
       </div>
 
-      <form onSubmit={buscarClima}>
-        <div className='input-group'>
-          <input className='form-control'
-          value={cidade}
-          onChange={(e) => setCidade(e.target.value)}
-          placeholder="Digite a cidade"
-        />
-        <button className="btn btn-outline-secondary" type="submit">Buscar</button>
-        { sugestoes?.length > 0 && (
-          <ul className="lista-sugestoes">
-            {sugestoes.map((sugestao) => (
-                            <li
-                key={sugestao.id}
-                onClick={() => {
-                  setCidade(sugestao.name); 
-                  setSugestoes([]); 
-                  buscarClima(sugestao.name); 
-                }}
-              >
-                {sugestao.name}, {sugestao.region}, {sugestao.country}
-              </li>
-            ))}
-          </ul>
-        )}
-        </div>        
-      </form>
+      <InputClima
+        cidade={cidade}
+        setCidade={setCidade}
+        buscarClima={buscarClima}
+        sugestoes={sugestoes}
+        setSugestoes={setSugestoes}
+        focado={focado}
+        setFocado={setFocado}
+      />
 
-      {carregando && <p>Carregando...</p>}
-      {erro && <p className="erro">{erro}</p>}
+      <AlertaErro erro={erro} carregando={carregando} />
 
-      {dados && (
-        <section className="mt-3">
-          <h2>{dados.name}</h2>
-          <p>🌡️ {dados.main.temp} °C</p>
-          <p>☁️ {dados.weather[0].description}</p>
-          <p>💧 Umidade: {dados.main.humidity}%</p>
-        </section>
-      )}
+      <ResultadoClima dados={dados} />
     </main>
   );
 }
