@@ -8,16 +8,12 @@ Aplicativo React que permite buscar informações meteorológicas de cidades usa
 ![Representação das sugestões de cidades}](https://github.com/user-attachments/assets/dce7a008-48f6-4c80-b6fd-bb156968b092)
 ![Resultado Final}](https://github.com/user-attachments/assets/62f51a9d-de76-4df3-9e99-db5dcde07566)
 
----
-
 ## 🚀 Funcionalidades
 
 - 🔍 Busca de cidades com sugestões automáticas.
 - ☁️ Exibe clima atual, descrição e umidade.
 - ⏳ Indicação de carregamento.
 - ❌ Tratamento de erros para cidades inválidas.
-
----
 
 ## Tecnologias Utilizadas
 
@@ -27,7 +23,6 @@ Aplicativo React que permite buscar informações meteorológicas de cidades usa
 - [OpenWeather API](https://openweathermap.org/api)
 - [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities/)
 
----
 
 ## 💡 Como obter as chaves de API
 
@@ -35,18 +30,13 @@ OpenWeather: https://openweathermap.org/api
 
 GeoDB Cities: https://rapidapi.com/wirefreethought/api/geodb-cities/
 
---
-
 ## 🤝 Contribuições
 
 Contribuições são bem-vindas! Sinta-se livre para abrir uma issue ou um pull request.
 
--- 
 
 ## ✨ Autoria
 Desenvolvido por Giullia Beatriz com muito amor!! ❤️
-
---  
 
 ## 📲 Contatos
 
