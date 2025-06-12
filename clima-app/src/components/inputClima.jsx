@@ -4,8 +4,8 @@ export default function InputClima({ cidade, setCidade, buscarClima, sugestoes, 
   return (
     <form onSubmit={(e) => { e.preventDefault(); buscarClima(); }}>
       <div className='input-group'>
-        <input
-          className='form-control outline-secondary'
+        <input id="input-clima"
+          className='form-control'
           value={cidade}
           onChange={(e) => setCidade(e.target.value)}
           onFocus={() => setFocado(true)}
